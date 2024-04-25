@@ -4,6 +4,7 @@ import os
 from PIL import Image
 
 import logging
+Image.MAX_IMAGE_PIXELS = None
 
 logger = logging.getLogger('preprocc')
 logger.setLevel(logging.DEBUG)
@@ -35,7 +36,7 @@ in_file_dir = os.listdir(input_folder)
 infiles = in_file_dir
 
 print(len(infiles))
-for i in range(len(infiles)):
+for i in range(6635, len(infiles)):
     logger.info(f"Processing {infiles[i]}")
     fname = infiles[i]
 
@@ -50,11 +51,10 @@ for i in range(len(infiles)):
     image = Image.open(input_folder + "/" + fname)
     opath = os.path.join(out_dir, '{}.{}'.format(f, out_format.lower()))
     image = image.resize((1024, 1024))
+    if image.mode == "CMYK":
+        image = image.convert("RGB")
     image.save(opath, out_format)
     logger.info(f"Saved {infiles[i]}: {i}/{len(infiles)}")
 
 logger.info(f"Finished processing {len(infiles)}")
 logger.info("Exiting")
-
-
-
